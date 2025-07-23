@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Task Management</title>
+    <link rel="stylesheet" href="Reject.css">
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleSidebar()">&#9776;</div>
+    <div class="sidebar" id="sidebar">
+       <a href="Employee8.html">Normal Task</a>
+    <a href="Reject 8.html">Rejected Task</a>
+        <!-- <a href="#">Settings</a> -->
+    </div>
+    <div class="container">
+        <!-- Task list section -->
+        <div class="task-list">
+            <h3>Tasks Rejected</h3>
+            <div id="taskList">
+                <!-- Task items will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Task details section -->
+        <div class="task-window">
+            <div class="task-details">
+                <h3>Select a task to view details</h3>
+                <div id="task-details">
+                    <!-- Task details will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Task submission section -->
+            <div class="task-submit">
+                <button id="submit-task-btn" disabled>Submit Task to Admin</button>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const taskList = document.getElementById("taskList");
+        const taskDetailsSection = document.getElementById("task-details");
+        const submitTaskBtn = document.getElementById("submit-task-btn");
+
+        let selectedTaskId = null;
+        let selectedTaskElement = null;
+        const timeline = 8;
+
+        function fetchTasks() {
+            fetch(`fetch_rejected_tasks.php?timeline=${timeline}`)
+                .then(res => res.json())
+                .then(tasks => {
+                    taskList.innerHTML = "";
+                    if (tasks.length === 0) {
+                        taskList.innerHTML = "<p>No rejected tasks assigned.</p>";
+                        return;
+                    }
+
+                    tasks.forEach(task => {
+                        const taskItem = document.createElement("div");
+                        taskItem.className = "task-item";
+
+                        let rejectedAt = task.rejected_at ? new Date(task.rejected_at) : null;
+                        let formattedDate = "Unknown";
+                        let daysDifference = "N/A";
+
+                        if (rejectedAt && !isNaN(rejectedAt)) {
+                            formattedDate = rejectedAt.toLocaleString();
+                            const today = new Date();
+                            const diff = today - rejectedAt;
+                            daysDifference = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        }
+
+                        taskItem.innerHTML = `
+                            <strong>${task.problem_reported}</strong><br>
+                            <span style="font-size:12px;color:gray;">Rejected ${daysDifference} days ago</span>
+                        `;
+                        taskItem.dataset.taskId = task.task_id;
+                        taskItem.addEventListener("click", () => showTaskDetails(task, taskItem, formattedDate));
+                        taskList.appendChild(taskItem);
+                    });
+                });
+        }
+
+        function showTaskDetails(task, taskItem, formattedDate) {
+            selectedTaskId = task.task_id;
+            selectedTaskElement = taskItem;
+
+            taskDetailsSection.innerHTML = `
+                <p><strong>Task ID:</strong> ${task.task_id}</p>
+                <p><strong>Customer Name:</strong> ${task.name}</p>
+                <p><strong>Accessories:</strong> ${task.accessories}</p>
+                <p><strong>Problem Reported:</strong> ${task.problem_reported}</p>
+                <p style="color: red;"><strong>Rejection Note:</strong> ${task.rejection_note || "No note provided."}</p>
+                <p><strong>Rejected At:</strong> ${formattedDate}</p>
+            `;
+
+            submitTaskBtn.disabled = false;
+        }
+
+        submitTaskBtn.addEventListener("click", () => {
+            if (!selectedTaskId) return;
+
+            fetch("submit_task.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ task_id: selectedTaskId, assigned_to: timeline })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ Task submitted successfully");
+                    selectedTaskElement.remove();
+                    taskDetailsSection.innerHTML = "<p>No task selected.</p>";
+                    submitTaskBtn.disabled = true;
+                } else {
+                    alert("❌ Error: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("❌ Submission failed");
+            });
+        });
+
+        fetchTasks();
+    });
+</script>
+
+</body>
+</html>
