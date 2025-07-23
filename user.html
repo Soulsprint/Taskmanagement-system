@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log In - Domain Computer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-image: url("Images/2.png");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: white;
+      font-size: 2em;
+      font-weight: 300;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 25px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-container {
+      display: none;
+    }
+
+    .form-container.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: white;
+      font-weight: 400;
+      font-size: 13px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 16px center;
+      background-repeat: no-repeat;
+      background-size: 14px;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-bottom: 15px;
+    }
+
+    .forgot-password a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 12px;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+      color: white;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-btn:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .contact-section {
+      margin-top: 15px;
+    }
+
+    .contact-title {
+      color: white;
+      font-size: 14px;
+      margin-bottom: 12px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-icon.twitter { 
+      background: #1da1f2; 
+    }
+    .social-icon.gmail { 
+      background: #dd4b39; 
+    }
+    .social-icon.instagram { 
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    .social-icon:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+
+    .domain-text {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 13px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .message {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      min-height: 16px;
+      margin-bottom: 10px;
+    }
+
+    .message.success {
+      background: rgba(212, 237, 218, 0.9);
+      color: #155724;
+      border: 1px solid rgba(195, 230, 203, 0.9);
+    }
+
+    .message.error {
+      background: rgba(248, 215, 218, 0.9);
+      color: #721c24;
+      border: 1px solid rgba(245, 198, 203, 0.9);
+    }
+
+    .loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #333;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px 15px;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Log In</h1>
+
+    <div class="tabs">
+      <button id="login-tab" class="tab-btn active">Sign In</button>
+      <button id="change-password-tab" class="tab-btn">Change Password</button>
+    </div>
+
+    <div id="message"></div>
+
+    <div class="form-container active" id="login-form">
+      <form id="login">
+        <div class="form-group">
+          <label for="user-select">Username</label>
+          <select id="user-select">
+            <option value="admin">admin</option>
+            <option value="emp1">emp1</option>
+            <option value="emp2">emp2</option>
+            <option value="emp3">emp3</option>
+            <option value="emp4">emp4</option>
+            <option value="emp5">emp5</option>
+            <option value="emp6">emp6</option>
+            <option value="emp7">emp7</option>
+            <option value="emp8">emp8</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+
+        <div class="forgot-password">
+          <a href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="login-btn">Log In</button>
+      </form>
+    </div>
+
+    <div class="form-container" id="change-password-form">
+      <form id="change-password">
+        <div class="form-group">
+          <label for="cp-user-select">Username</label>
+          <select id="cp-user-select">
+            <option value="admin">admin</option>
+            <option value="emp1">emp1</option>
+            <option value="emp2">emp2</option>
+            <option value="emp3">emp3</option>
+            <option value="emp4">emp4</option>
+            <option value="emp5">emp5</option>
+            <option value="emp6">emp6</option>
+            <option value="emp7">emp7</option>
+            <option value="emp8">emp8</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="old-password">Old Password</label>
+          <input type="password" id="old-password" placeholder="Enter old password" required />
+        </div>
+
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="Enter new password" required />
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" placeholder="Confirm new password" required />
+        </div>
+
+        <button type="submit" class="login-btn">Change Password</button>
+      </form>
+    </div>
+
+    <div class="contact-section">
+      <div class="contact-title">Contact</div>
+      <div class="social-icons">
+        <a href="#" class="social-icon twitter">
+          <svg viewBox="0 0 24 24">
+            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-icon gmail">
+          <svg viewBox="0 0 24 24">
+            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-.904.732-1.636 1.636-1.636h.984L12 10.091l9.38-6.27h.984c.904 0 1.636.732 1.636 1.636z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-icon instagram">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+      </div>
+      <div class="domain-text">Domain Computer</div>
+    </div>
+  </div>
+
+  <script>
+    const loginTab = document.getElementById("login-tab");
+    const changeTab = document.getElementById("change-password-tab");
+    const loginForm = document.getElementById("login-form");
+    const changeForm = document.getElementById("change-password-form");
+    const message = document.getElementById("message");
+
+    loginTab.addEventListener("click", () => {
+      loginForm.classList.add("active");
+      changeForm.classList.remove("active");
+      loginTab.classList.add("active");
+      changeTab.classList.remove("active");
+      message.innerHTML = "";
+      message.className = "message";
+    });
+
+    changeTab.addEventListener("click", () => {
+      changeForm.classList.add("active");
+      loginForm.classList.remove("active");
+      changeTab.classList.add("active");
+      loginTab.classList.remove("active");
+      message.innerHTML = "";
+      message.className = "message";
+    });
+
+    document.getElementById("login").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const username = document.getElementById("user-select").value;
+      const password = document.getElementById("password").value;
+
+      // Show loading state
+      const submitBtn = this.querySelector('.login-btn');
+      submitBtn.classList.add('loading');
+      submitBtn.textContent = 'Logging in...';
+
+      // Simulate API call - replace with your actual login.php endpoint
+      fetch("login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Remove loading state
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Log In';
+
+        if (data.error) {
+          message.innerHTML = data.error;
+          message.className = "message error";
+        } else {
+          message.innerHTML = `Welcome, ${data.user.full_name} (${data.user.role})`;
+          message.className = "message success";
+
+          // Redirect based on role
+          if (data.user.role === "admin") {
+            setTimeout(() => {
+              window.location.href = "adminpage.html";
+            }, 1000);
+          } else if (data.user.username.startsWith("emp")) {
+            const empNumber = data.user.username.replace("emp", "");
+            const empPage = `EMP/Employee${empNumber}.html`;
+            setTimeout(() => {
+              window.location.href = empPage;
+            }, 1000);
+          } else {
+            message.innerHTML = "Unknown user role.";
+            message.className = "message error";
+          }
+        }
+      })
+      .catch(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Log In';
+        message.innerHTML = "Login failed. Please try again.";
+        message.className = "message error";
+      });
+    });
+
+    document.getElementById("change-password").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const username = document.getElementById("cp-user-select").value;
+      const old_password = document.getElementById("old-password").value;
+      const new_password = document.getElementById("new-password").value;
+      const confirm_password = document.getElementById("confirm-password").value;
+
+      if (new_password !== confirm_password) {
+        message.innerHTML = "New passwords do not match.";
+        message.className = "message error";
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = this.querySelector('.login-btn');
+      submitBtn.classList.add('loading');
+      submitBtn.textContent = 'Changing Password...';
+
+      fetch("change_password.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, old_password, new_password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Remove loading state
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Change Password';
+
+        if (data.error) {
+          message.innerHTML = data.error;
+          message.className = "message error";
+        } else {
+          message.innerHTML = data.message;
+          message.className = "message success";
+          // Clear form on success
+          this.reset();
+        }
+      })
+      .catch(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Change Password';
+        message.innerHTML = "Password change failed. Please try again.";
+        message.className = "message error";
+      });
+    });
+  </script>
+</body>
+</html>
