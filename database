@@ -1,0 +1,127 @@
+
+create database task_managemenet;
+
+CREATE TABLE task (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    number VARCHAR(255) NOT NULL,
+    accessories VARCHAR(255) NOT NULL,
+    problem_reported TEXT NOT NULL,
+    timeline INT NOT NULL,
+    assigned_to INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) DEFAULT 'Pending',
+    response TEXT DEFAULT NULL
+);
+
+
+
+
+
+-- Create stored_task table
+CREATE TABLE IF NOT EXISTS storage (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    number VARCHAR(20) NOT NULL,
+    accessories VARCHAR(255) NOT NULL,
+    problem_reported TEXT NOT NULL,
+    timeline INT NOT NULL,
+    assigned_to INT DEFAULT NULL,
+    status ENUM('active', 'stored') DEFAULT 'stored'
+);
+
+
+
+
+
+
+
+
+CREATE TABLE approved_tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    number VARCHAR(20),
+    accessories VARCHAR(255),
+    problem_reported TEXT,
+    timeline INT,
+    status VARCHAR(50) DEFAULT 'approved',
+    
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE completed_tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    number VARCHAR(20),
+    accessories TEXT,
+    problem_reported TEXT,
+    timeline INT,
+    assigned_to VARCHAR(255),
+    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+CREATE TABLE rejected_tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    number VARCHAR(255) NOT NULL,
+    accessories VARCHAR(255),
+    problem_reported TEXT,
+    timeline INT NOT NULL,
+    assigned_to VARCHAR(255),
+    rejection_note TEXT,
+    rejected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE picked_tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    number VARCHAR(20),
+    accessories TEXT,
+    problem_reported TEXT,
+    timeline VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+
+
+
+ 
+
+
+
+
+CREATE TABLE IF NOT EXISTS auth_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password CHAR(64) NOT NULL,
+    role ENUM('admin', 'employee') NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+
+
+-- Insert predefined users
+INSERT INTO auth_users (username, password, role, full_name) VALUES
+('admin', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'admin', 'System Administrator'),
+('emp1', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee One'),
+('emp2', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Two'),
+('emp3', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Three'),
+('emp4', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Four'),
+('emp5', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Five'),
+('emp6', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Six'),
+('emp7', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Seven'),
+('emp8', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', 'employee', 'Employee Eight');
+
+-- Create indexes
+CREATE INDEX idx_auth_users_username ON auth_users(username);
